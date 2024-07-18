@@ -6,6 +6,10 @@ spring:
     url: jdbc:mysql://localhost:3306/2024_Summer_Coding?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: root
     password: =dl-13579
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 management:
   endpoints:

@@ -11,13 +11,17 @@ networks:
       com.docker.compose.project: '2024_summer_coding'
     external: false
 
+# swarm 모드에서는 overlay 를 사용해야한다.
+#networks:
+#  2024_summer_coding:
+#    driver: overlay
 
 services:
   mysqldb:
     image: mysql:latest
-    container_name: mysqldb 
+    container_name: mysqldb
     environment:
-      MYSQL_ROOT_PASSWORD: '=dl-13579' 
+      MYSQL_ROOT_PASSWORD: '=dl-13579'
       MYSQL_DATABASE: '2024_summer_coding'
     volumes:
       - ../mysql-data:/var/lib/mysql
@@ -26,20 +30,36 @@ services:
     networks:
       - 2024_summer_coding
 
+  redisdb:
+    image: redis:latest
+    container_name: redisdb
+    volumes:
+      - ../redis-data:/data
+    ports:
+      - 6379:6379
+    networks:
+      - 2024_summer_coding
+
   springboot:
     image: springboot:latest
-    container_name: springboot
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/2024_summer_coding?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: =dl-13579
       SPRING__PROFILES_ACTIVE: docker
-    ports:
-      - 8080:8080
+#    deploy:
+#      replicas: 3
     networks:
       - 2024_summer_coding
     depends_on:
       - mysqldb
+      - redisdb
+
+# 외부포트 열면 에러 발생 -> 포트 중복
+# scale out 시점에 다른 사설 Ip 주소 할당받고 모두 8080 포트 사용하게된다.
+# 웹서버인 Nginx 로 접근
+
+# 컨테이너명도 설정하면 컨테이너명 중복되어 에러발생한다.
 
   prometheus:
     image: prom/prometheus:latest
@@ -53,6 +73,21 @@ services:
       - 2024_summer_coding
     depends_on:
       - springboot
+
+  influxdb:
+    image: influxdb:1.8.5
+    container_name: influxdb
+    environment:
+      - INFLUXDB_ADMIN_ENABLED=true
+      - INFLUXDB_HTTP_AUTH_ENABLED=false
+      - INFLUXDB_DB= admin
+    volumes:
+      - ../influxdb-data:/var/lib/influxdb
+    ports:
+      - 8086:8086
+      - 8088:8088
+    networks:
+      - 2024_summer_coding
 
   grafana:
     image: grafana/grafana:latest
@@ -76,6 +111,7 @@ services:
       - 80:80
       - 443:443
     networks:
-      - 2024_summer_coding  
+      - 2024_summer_coding
     depends_on:
-      - springboot  
+      - springboot
+    restart: always
