@@ -19,6 +19,16 @@ public class BookResponseDTO {
     @Builder
     @Getter
     @EqualsAndHashCode
+    public static class UpdateResultDTO {
+        private Long id;
+        private String title;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Getter
+    @EqualsAndHashCode
     public static class FindResultDTO {
         private Long id;
         private String title;

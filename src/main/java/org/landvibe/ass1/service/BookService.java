@@ -1,10 +1,9 @@
 package org.landvibe.ass1.service;
 
 import lombok.RequiredArgsConstructor;
-import org.landvibe.ass1.converter.BookConverter;
-import org.landvibe.ass1.dto.BookRequestDTO;
-import org.landvibe.ass1.dto.BookResponseDTO;
-import org.landvibe.ass1.domain.Book;
+import org.landvibe.ass1.cache.annotation.CacheOutLandVibe;
+import org.landvibe.ass1.cache.annotation.CachingLandVibe;
+import org.landvibe.ass1.entity.Book;
 import org.landvibe.ass1.exception.BookException;
 import org.landvibe.ass1.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -19,23 +18,40 @@ public class BookService {
     private final BookRepository bookRepository;
 
     @Transactional
-    public BookResponseDTO.CreateResultDTO saveBook(BookRequestDTO.CreateDTO createDTO) {
+    @CachingLandVibe(key = "book:{0}", cacheManager = "bookCacheManager", method = "POST")
+    public Book saveBook(Book book) {
 
-        Book book = bookRepository.insert(BookConverter.toBook(createDTO));
-        return BookConverter.toCreateResultDTO(book);
+        return bookRepository.insert(book);
+    }
+
+    @Transactional
+    @CachingLandVibe(key = "book:{0}", cacheManager = "bookCacheManager", method = "PATCH")
+    public Book updateBook(Book book) {
+
+        return bookRepository.update(book);
     }
 
     @Transactional(readOnly = true)
-    public BookResponseDTO.FindResultDTO findById(Long id) throws BookException {
+    @CachingLandVibe(key = "book:{0}", cacheManager = "bookCacheManager", method = "GET")
+    public Book findById(Long id) throws BookException {
 
-        Book book = bookRepository.findById(id);
-        return BookConverter.toFindResultDTO(book);
+        return bookRepository.findById(id);
     }
 
+    // list
     @Transactional(readOnly = true)
-    public List<BookResponseDTO.FindResultDTO> findAll() {
+    @CachingLandVibe(key = "book", cacheManager = "bookCacheManager", method = "GET")
+    public List<Book> findAll() {
 
         List<Book> bookList = bookRepository.findAll();
-        return BookConverter.toFindResultDTOList(bookList);
+        return bookList;
+    }
+
+    // evict
+    @Transactional(readOnly = true)
+    @CacheOutLandVibe(key = "book:{0}", cacheManager = "bookCacheManager")
+    public Book cacheOutById(Long id) throws BookException {
+
+        return bookRepository.findById(id);
     }
 }

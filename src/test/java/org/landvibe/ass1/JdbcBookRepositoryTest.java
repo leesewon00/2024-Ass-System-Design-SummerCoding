@@ -2,7 +2,7 @@ package org.landvibe.ass1;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.landvibe.ass1.domain.Book;
+import org.landvibe.ass1.entity.Book;
 import org.landvibe.ass1.exception.BookException;
 import org.landvibe.ass1.repository.JdbcBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;

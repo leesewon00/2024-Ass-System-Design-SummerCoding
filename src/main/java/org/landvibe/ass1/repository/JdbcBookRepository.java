@@ -1,7 +1,7 @@
 package org.landvibe.ass1.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.landvibe.ass1.domain.Book;
+import org.landvibe.ass1.entity.Book;
 import org.landvibe.ass1.exception.BookException;
 import org.landvibe.ass1.exception.ErrorMessage;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,6 +46,17 @@ public class JdbcBookRepository implements BookRepository {
         parameters.put("title", book.getTitle());
         Number key = simpleJdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return new Book(key.longValue(), book.getTitle());
+    }
+
+    @Override
+    public Book update(Book book) {
+        String query = "UPDATE book SET title = ? WHERE id = ?";
+        int rowsAffected = jdbcTemplate.update(query, book.getTitle(), book.getId());
+        if (rowsAffected > 0) {
+            return new Book(book.getId(), book.getTitle());
+        } else {
+            throw new BookException(ErrorMessage.INVALID_ID);
+        }
     }
 
     @Override

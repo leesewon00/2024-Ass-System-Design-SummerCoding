@@ -1,4 +1,4 @@
-package org.landvibe.ass1.domain;
+package org.landvibe.ass1.entity;
 
 import lombok.*;
 

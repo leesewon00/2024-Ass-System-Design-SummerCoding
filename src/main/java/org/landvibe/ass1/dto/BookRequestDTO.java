@@ -14,4 +14,15 @@ public class BookRequestDTO {
         @NotBlank
         private String title;
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Getter
+    @EqualsAndHashCode
+    public static class UpdateDTO {
+        private Long id;
+        @NotBlank
+        private String title;
+    }
 }

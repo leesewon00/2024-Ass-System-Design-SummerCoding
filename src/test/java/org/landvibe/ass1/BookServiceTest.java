@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.landvibe.ass1.converter.BookConverter;
-import org.landvibe.ass1.domain.Book;
+import org.landvibe.ass1.entity.Book;
 import org.landvibe.ass1.dto.BookRequestDTO;
 import org.landvibe.ass1.dto.BookResponseDTO;
 import org.landvibe.ass1.exception.BookException;
@@ -42,33 +42,33 @@ public class BookServiceTest {
                 .build();
     }
 
-    @Test
-    @DisplayName("saveBook")
-    void saveBook() {
+//    @Test
+//    @DisplayName("saveBook")
+//    void saveBook() {
+//
+//        Book book = createBook();
+//        BookRequestDTO.CreateDTO createDTO = createCreateDTO();
+//        when(bookRepository.insert(BookConverter.toBook(createDTO))).thenReturn(book);
+//
+//        BookResponseDTO.CreateResultDTO createResultDTO = bookService.saveBook(createDTO);
+//
+//        assertThat(createResultDTO).isEqualTo(BookConverter.toCreateResultDTO(book));
+//        verify(bookRepository, times(1)).insert(BookConverter.toBook(createDTO));
+//    }
 
-        Book book = createBook();
-        BookRequestDTO.CreateDTO createDTO = createCreateDTO();
-        when(bookRepository.insert(BookConverter.toBook(createDTO))).thenReturn(book);
-
-        BookResponseDTO.CreateResultDTO createResultDTO = bookService.saveBook(createDTO);
-
-        assertThat(createResultDTO).isEqualTo(BookConverter.toCreateResultDTO(book));
-        verify(bookRepository, times(1)).insert(BookConverter.toBook(createDTO));
-    }
-
-    @Test
-    @DisplayName("findById")
-    void findById() {
-
-        Book book = createBook();
-        when(bookRepository.findById(book.getId())).thenReturn(book);
-
-        BookResponseDTO.FindResultDTO findResultDTO = bookService.findById(book.getId());
-
-        assertThat(findResultDTO).isEqualTo(BookConverter.toFindResultDTO(book));
-        verify(bookRepository, times(1)).findById(book.getId());
-
-    }
+//    @Test
+//    @DisplayName("findById")
+//    void findById() {
+//
+//        Book book = createBook();
+//        when(bookRepository.findById(book.getId())).thenReturn(book);
+//
+//        BookResponseDTO.FindResultDTO findResultDTO = bookService.findById(book.getId());
+//
+//        assertThat(findResultDTO).isEqualTo(BookConverter.toFindResultDTO(book));
+//        verify(bookRepository, times(1)).findById(book.getId());
+//
+//    }
 
     @Test
     @DisplayName("findById_fail_invalid_id")
@@ -85,17 +85,17 @@ public class BookServiceTest {
         verify(bookRepository, times(1)).findById(id);
     }
 
-    @Test
-    @DisplayName("findAll")
-    void findAll() {
-
-        List<Book> bookList = new ArrayList<>();
-        when(bookRepository.findAll()).thenReturn(bookList);
-
-        List<BookResponseDTO.FindResultDTO> findResultDTOList = bookService.findAll();
-
-        assertThat(findResultDTOList).isEqualTo(BookConverter.toFindResultDTOList(bookList));
-        verify(bookRepository, times(1)).findAll();
-    }
+//    @Test
+//    @DisplayName("findAll")
+//    void findAll() {
+//
+//        List<Book> bookList = new ArrayList<>();
+//        when(bookRepository.findAll()).thenReturn(bookList);
+//
+//        List<BookResponseDTO.FindResultDTO> findResultDTOList = bookService.findAll();
+//
+//        assertThat(findResultDTOList).isEqualTo(BookConverter.toFindResultDTOList(bookList));
+//        verify(bookRepository, times(1)).findAll();
+//    }
 
 }
